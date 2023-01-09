@@ -1,48 +1,23 @@
-import React from 'react'
-import Card from "../Card/Card"
-import './List.scss'
+import React from "react";
+import useFetch from "../../hooks/useFetch";
+import Card from "../Card/Card";
+import "./List.scss";
 
-const data = [
-    {
-        id: 1,
-        img:'https://images.pexels.com/photos/158648/girl-coat-old-coat-brown-coat-158648.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
-        title:'Coat',
-        isNew:true,
-        oldPrice:19,
-        price:12
-    },
-    {
-        id: 2,
-        img:'https://images.pexels.com/photos/1425248/pexels-photo-1425248.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
-        title:'Skirt',
-        oldPrice:19,
-        price:12
-    },
-    {
-        id: 3,
-        img:'https://images.pexels.com/photos/10370348/pexels-photo-10370348.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
-        title:'Hat',
-        isNew:true,
-        oldPrice:190,
-        price:120
-    },
-    {
-        id: 4,
-        img:'https://images.pexels.com/photos/842959/pexels-photo-842959.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
-        title:'Bag',
-        isNew:true,
-        oldPrice:190,
-        price:120
-    }
-]
-function List() {
+function List({ subCats, maxPrice, sort, catId }) {
+  const { data, loading, error } = useFetch(
+    `/products?populate=*&[filters][categories][id]=${catId}${subCats.map(
+      (item) => `&[filters][sub_categories][id][$eq]=${item}`
+    )}&[filters][price][$lte]=${maxPrice}&sort=price:${sort}`
+  );
+  console.log(data);
+
   return (
-    <div className='list'>
-        {data.map((item) => (
-            <Card item={item} key={item.id}  />
-        ))}
+    <div className="list">
+      {loading
+        ? "loading"
+        : data?.map((item) => <Card item={item} key={item.id} />)}
     </div>
-  )
+  );
 }
 
-export default List
+export default List;

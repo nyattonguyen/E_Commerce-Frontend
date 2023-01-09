@@ -57,10 +57,11 @@
     }
     .total{
         display: flex;
-        justify-content: center;
+        justify-content: space-between;
         font-weight: 500;
         font-size: 18px;
         margin-bottom: 20px;
+        
     }
     button {
         width: 250px;

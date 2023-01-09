@@ -1,74 +1,50 @@
-import React from 'react'
-import './Cart.scss'
+import React from "react";
+import "./Cart.scss";
 import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
-
+import { useDispatch, useSelector } from "react-redux";
+import { removeItem, resetCart } from "../../redux/cartReducer";
 
 function Cart() {
-    const data = [
-        {
-            id: 1,
-            img:'https://images.pexels.com/photos/158648/girl-coat-old-coat-brown-coat-158648.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
-            title:'Coat',
-            isNew:true,
-            oldPrice:19,
-            price:12,
-            desc:'aaa....aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
-        },
-        {
-            id: 2,
-            img:'https://images.pexels.com/photos/1425248/pexels-photo-1425248.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
-            title:'Skirt',
-            oldPrice:19,
-            price:12,
-            desc:'aaaa....'
+  const products = useSelector((state) => state.cart.products);
 
-        },
-        // {
-        //     id: 3,
-        //     img:'https://images.pexels.com/photos/10370348/pexels-photo-10370348.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
-        //     title:'Hat',
-        //     isNew:true,
-        //     oldPrice:190,
-        //     price:120,
-        //     desc:'aaaaa......'
+  const dispatch = useDispatch();
 
-        // },
-        // {
-        //     id: 4,
-        //     img:'https://images.pexels.com/photos/842959/pexels-photo-842959.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
-        //     title:'Bag',
-        //     isNew:true,
-        //     oldPrice:190,
-        //     price:120,
-        //     desc:'acb'
-
-        // }
-    ]
-
+  const totalPrice = () => {
+    let total = 0;
+    products.forEach((item) => {
+      total += item.quantity * item.price;
+    });
+    return total.toFixed(2);
+  };
   return (
     <div className="cart">
-        <h1>Products in your cart</h1>
-        {data.map(item =>(
-            <div className="item" key={item.id}>
-                <img src={item.img} alt="" />
-                <div className="details">
-                    <h1>{item.title}</h1>
-                    <p>{item.desc?.substring(0, 30)}</p>
-                    <div className="price">1 x ${item.price}</div>
-                </div>
-                <DeleteOutlinedIcon className="delete" />
+      <h1>Products in your cart</h1>
+      {products?.map((item) => (
+        <div className="item" key={item.id}>
+          <img src={process.env.REACT_APP_UPLOAD_URL + item.img} alt="" />
+          <div className="details">
+            <h1>{item.title}</h1>
+            <p>{item.desc?.substring(0, 30)}</p>
+            <div className="price">
+              {item.quantity} x ${item.price}
             </div>
-            ))}
-            <div className="total">
-                <span>Subtotal</span>
-                <span>$120</span>
-            </div>
-            <button>PROCEED TO CHECKOUT</button>
-            <span className="reset">
-                Reset Cart
-            </span>
+          </div>
+          <DeleteOutlinedIcon
+            className="delete"
+            onClick={() => dispatch(removeItem(item.id))}
+          />
+        </div>
+      ))}
+      <div className="total">
+        <span>Subtotal</span>
+        <span>${totalPrice()}</span>
+      </div>
+      <button>PROCEED TO CHECKOUT</button>
+      <span className="reset" onClick={() => dispatch(resetCart())}>
+        Reset Cart
+      </span>
     </div>
-  )
+  );
 }
 
-export default Cart
+export default Cart;
