@@ -7,7 +7,7 @@ import "./Products.scss";
 function Products() {
   const catId = parseInt(useParams().id);
   const [maxPrice, setMaxPrice] = useState(1000);
-  const [sort, setSort] = useState(null);
+  const [sort, setSort] = useState("asc");
   const [selectedSubCats, setSelectedSubCats] = useState([]);
 
   const { data, loading, error } = useFetch(
@@ -24,7 +24,6 @@ function Products() {
         : selectedSubCats.filter((item) => item !== value)
     );
   };
-  console.log(selectedSubCats);
   return (
     <div className="products">
       <div className="left">
